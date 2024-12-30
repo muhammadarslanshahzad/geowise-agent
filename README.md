@@ -8,6 +8,42 @@
   - `get_countries_by_name` (RESTCountries API)
   - `google_search` (Web search)
 
+## Future Tool Ideas
+    We need to develop these tools to give more power to our agent.
+- **Real-Time Weather**  
+  - **What**: A tool to query current weather data by city or country.  
+  - **Why**: Adds a useful layer of context for travelers or curious users.  
+  - **How**: Use an external API like [OpenWeatherMap](https://openweathermap.org/api).
+
+- **Text-to-Image Generation**  
+  - **What**: Generate custom images related to countries or other user requests.  
+  - **Why**: Provides a more interactive visual experience.  
+  - **How**: Integrate a small/quantized model (e.g., Stable Diffusion 1.5 in 4-bit) or a mini model like Craiyon.
+
+- **Currency Conversion**  
+  - **What**: Get exchange rates for different currencies.  
+  - **Why**: Useful for travel planning or financial questions.  
+  - **How**: Hook into an API like [ExchangeRate-API](https://www.exchangerate-api.com/).
+
+- **Airline & Flight Info**  
+  - **What**: Check flight routes, times, or prices.  
+  - **Why**: Helpful if the user is planning a trip.  
+  - **How**: Use a flight data API (e.g., [Skyscanner’s API](https://rapidapi.com/skyscanner/api/skyscanner-flight-search)).
+
+- **Local Time & Timezone Lookups**  
+  - **What**: Return the current local time in a country or city.  
+  - **Why**: More user-friendly than having to do manual time zone math.  
+  - **How**: Integrate a tool using something like [WorldTimeAPI](http://worldtimeapi.org/).
+
+- **Real-Time News Aggregator**  
+  - **What**: Search news headlines relevant to a given country or topic.  
+  - **Why**: Provides up-to-date info beyond static background facts.  
+  - **How**: Use a tool with a news API (e.g., [News API](https://newsapi.org/)).
+
+
+---
+
+
 ## AI Feature Roadmap (Priority)
 
 1. **Knowledge Base / RAG**  
