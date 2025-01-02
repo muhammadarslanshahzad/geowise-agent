@@ -13,13 +13,13 @@ from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from langchain_ollama import ChatOllama
 
-from tools import google_search, get_countries_by_name, get_local_time
+from tools import google_search, get_countries_by_name
 
 def create_conversational_agent():
     """
     Create the conversational agent.
     """
-    tools = [google_search, get_countries_by_name, get_local_time]
+    tools = [google_search, get_countries_by_name]
 
     # functions = [convert_to_openai_function(f) for f in tools]
 
