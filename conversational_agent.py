@@ -13,13 +13,13 @@ from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from langchain_ollama import ChatOllama
 
-from tools import google_search, get_countries_by_name
+from tools import google_search, get_countries_by_name, get_local_time
 
 def create_conversational_agent():
     """
     Create the conversational agent.
     """
-    tools = [google_search, get_countries_by_name]
+    tools = [google_search, get_countries_by_name, get_local_time]
 
     # functions = [convert_to_openai_function(f) for f in tools]
 
@@ -31,7 +31,7 @@ def create_conversational_agent():
 
     prompt = ChatPromptTemplate(
         [
-            ("system", "You are a helpful assistant that can answer questions about countries and search the web."),
+            ("system", "You are a helpful assistant that can answer questions about countries and search the web. Use the tools provided to you to answer users questions."),
             MessagesPlaceholder(variable_name="chat_history"),
             ("user", "{input}"),
             MessagesPlaceholder(variable_name="agent_scratchpad"),
