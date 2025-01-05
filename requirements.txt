@@ -3,3 +3,7 @@ langchain-ollama
 langchain_community
 loguru
 streamlit
+beautifulsoup4
+geopy
+timezonefinder
+pytz

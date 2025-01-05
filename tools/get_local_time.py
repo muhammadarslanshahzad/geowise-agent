@@ -1,26 +1,41 @@
 """
-    This module contains a tool that gets the local time of a city.
+    The get_local_time.py script uses the geopy and timezonefinder libraries to get the timezone and local time for a given city.
+
 """
+from datetime import datetime
+from geopy.geocoders import Nominatim
+from timezonefinder import TimezoneFinder
 from langchain.tools import tool
-from langchain_community.utilities import SerpAPIWrapper
+import pytz
 
 @tool
-def google_local_time(city: str) -> dict:
+def get_local_time(city: str) -> dict:
     """
-    Search for a query on google and return the top 5 results.
+    Get the timezone and local time for a given city.
 
     Args:
-        query (str): The query to search for.
+        city (str): The name of the city.
 
     Returns:
-        list: The top 5 search results.
+        dict: Contains the timezone and local time or an error message.
     """
-    query = f"current time in {city}"
-    serp_api_wrapper = SerpAPIWrapper()
-    search_results = serp_api_wrapper.search(query)
-    if "local_time" in search_results:
-            return {"status": "success", "time": search_results["local_time"]}
-    return {"status": "success", "data": search_results}
+    try:
+        # Get city coordinates using geopy
+        geolocator = Nominatim(user_agent="timezone_locator")
+        location = geolocator.geocode(city)
+        if not location:
+            return {"status": "error", "message": f"City '{city}' not found."}
 
-if __name__ == "__main__":
-    print(google_local_time("New York"))
+        # Get timezone using coordinates
+        tf = TimezoneFinder()
+        timezone_str = tf.timezone_at(lat=location.latitude, lng=location.longitude)
+        if not timezone_str:
+            return {"status": "error", "message": "Timezone could not be determined."}
+
+        # Get the current local time
+        timezone = pytz.timezone(timezone_str)
+        local_time = datetime.now(timezone).strftime("%Y-%m-%d %H:%M:%S")
+
+        return f"The local time in {city.title()} ({timezone_str}) is {local_time}."
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
