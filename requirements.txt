@@ -4,6 +4,9 @@ langchain_community
 loguru
 streamlit
 beautifulsoup4
-geopy
-timezonefinder
-pytz
+# geopy
+# timezonefinder
+# pytz
+# requests
+python-dotenv
+google-search-results

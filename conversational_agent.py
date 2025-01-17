@@ -19,19 +19,90 @@ from tools import (
     get_local_time)
 
 
+# def create_conversational_agent():
+#     """
+#     Create the conversational agent with tools, prompt, memory, and execution chain.
+#     """
+#     tools = [
+#         google_search,
+#         get_countries_by_name,
+#         get_local_time,
+#         get_weather
+#         ]
+
+#     # Convert tools into OpenAI-compatible functions
+#     functions = [convert_to_openai_function(tool) for tool in tools]
+
+#     # Define the model
+#     model = ChatOllama(
+#         base_url="http://localhost:11434",
+#         model="llama3",
+#         temperature=0.0,
+#     )
+
+#     # Define the system prompt
+#     prompt = ChatPromptTemplate(
+#         [
+#             (
+#                 "system",
+#                 "You are a helpful assistant that answers user questions by directly using the tools provided. "
+#                 "Your response must directly include the output from the tools. Do not add any extra information unless explicitly asked.",
+#             ),
+#             MessagesPlaceholder(variable_name="chat_history"),
+#             ("user", "{input}"),
+#             MessagesPlaceholder(variable_name="agent_scratchpad"),
+#         ]
+#     )
+
+#     # Define memory for conversational context
+#     memory = ConversationBufferWindowMemory(
+#         return_messages=True,
+#         memory_key="chat_history",
+#         k=5  # Adjust context length as needed
+#     )
+
+#     # Define the execution chain
+#     chain = (
+#         RunnablePassthrough.assign(
+#             agent_scratchpad=lambda x: format_to_openai_functions(x["intermediate_steps"])
+#         )
+#         | prompt
+#         | model
+#         | OpenAIFunctionsAgentOutputParser()
+#     )
+
+#     # Wrap the chain into an agent executor
+#     agent_executor = AgentExecutor(
+#         agent=chain,
+#         tools=tools,
+#         memory=memory,
+#         verbose=True,  # Enable verbose for debugging
+#     )
+
+#     return agent_executor
+
 def create_conversational_agent():
-    """
-    Create the conversational agent with tools, prompt, memory, and execution chain.
-    """
     tools = [
         google_search,
         get_countries_by_name,
         get_local_time,
-        get_weather
-        ]
+        get_weather,
+    ]
 
-    # Convert tools into OpenAI-compatible functions
-    functions = [convert_to_openai_function(tool) for tool in tools]
+    # Debugging tools
+    print("Loading tools...")
+    for tool in tools:
+        if hasattr(tool, 'name'):
+            print(f"Tool: {tool.name}")
+        else:
+            print(f"Tool: {tool}")
+
+    functions = []
+    for tool in tools:
+        try:
+            functions.append(convert_to_openai_function(tool))
+        except Exception as e:
+            print(f"Error converting tool '{tool.__name__}': {e}")
 
     # Define the model
     model = ChatOllama(
@@ -40,13 +111,15 @@ def create_conversational_agent():
         temperature=0.0,
     )
 
-    # Define the system prompt
     prompt = ChatPromptTemplate(
         [
             (
                 "system",
-                "You are a helpful assistant that answers user questions by directly using the tools provided. "
-                "Your response must directly include the output from the tools. Do not add any extra information unless explicitly asked.",
+                "You are a helpful assistant. Always use the provided tools to answer user queries, and directly include their output in your response. "
+                "Do not provide an example or a pre-trained answer; always call the relevant tool to get the actual output."
+                "local_time tools returns a json object with keys 'status', 'city', 'timezone', 'local_time'."
+                "your response must directly include the output from the tools. Do not add any extra information unless explicitly asked.",
+          
             ),
             MessagesPlaceholder(variable_name="chat_history"),
             ("user", "{input}"),
@@ -54,14 +127,12 @@ def create_conversational_agent():
         ]
     )
 
-    # Define memory for conversational context
     memory = ConversationBufferWindowMemory(
         return_messages=True,
         memory_key="chat_history",
-        k=5  # Adjust context length as needed
+        k=5
     )
 
-    # Define the execution chain
     chain = (
         RunnablePassthrough.assign(
             agent_scratchpad=lambda x: format_to_openai_functions(x["intermediate_steps"])
@@ -71,12 +142,11 @@ def create_conversational_agent():
         | OpenAIFunctionsAgentOutputParser()
     )
 
-    # Wrap the chain into an agent executor
     agent_executor = AgentExecutor(
         agent=chain,
         tools=tools,
         memory=memory,
-        verbose=True,  # Enable verbose for debugging
+        verbose=True,  # Enables detailed logging
     )
 
     return agent_executor
