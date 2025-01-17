@@ -50,5 +50,5 @@ class TimeService:
                 "timezone": timezone_str,
                 "local_time": local_time,
             }
-        except Exception as e:
+        except (ConnectionError, TimeoutError, ValueError) as e:
             return {"status": "error", "message": str(e)}
