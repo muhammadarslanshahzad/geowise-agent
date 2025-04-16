@@ -1,12 +1,16 @@
 langchain
-langchain-ollama
 langchain_community
 loguru
 streamlit
 beautifulsoup4
-# geopy
-# timezonefinder
-# pytz
-# requests
+geopy
+timezonefinder
+pytz
+requests
 python-dotenv
 google-search-results
+CurrencyConverter
+transformers
+torch
+langchain-google-genai
+python-dotenv

@@ -15,9 +15,6 @@ tools = [
     Tool(name="Current Time", func=current_time, description=(
         "Use this to  the local time in a location."
         "Input must be city name only. one city name at a time.")),
-    # Tool(name="Currency Exchange", func=currency_exchange, description=
-    #      ("Get the exchange rate between two currencies."
-    #       "Input should be a dictionary with 'base_currency' and 'target_currency'.")),
 ]
 
 
@@ -38,8 +35,6 @@ agent = initialize_agent(
     handle_parsing_errors=True
     )
 
-response = agent.run("You can use your tools only once, \
-                     and you need to Plan a 3-day trip to Pakistan, \
-                     covering Karachi, Lahore, and Islamabad. \
+response = agent.run("Plan a 1-day trip to Bahawalpur. \
                      The trip should include places to visit.")
 print(response)
