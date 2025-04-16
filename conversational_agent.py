@@ -129,7 +129,7 @@ def create_conversational_agent():
     # Define the model
     model = ChatGoogleGenerativeAI(
         api_key=GEMINI_API_KEY,
-        model="gemini-2.0-pro-exp-02-05",  # Use "pro" model for richer replies
+        model=os.environ.get("MODEL_NAME"),  # Use "pro" model for richer replies
         temperature=0.5,
         max_tokens=None,
         timeout=None,
