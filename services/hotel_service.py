@@ -1,8 +1,7 @@
 from duckduckgo_search import DDGS
 
 def search_hotels(query: str):
-    """DuckDuckGo search to simulate hotel listings."""
-    full_query = f"{query} hotel site:google.com/travel/hotels"
+    """Search hotels using DuckDuckGo."""
+    full_query = f"{query} hotel options site:booking.com OR site:tripadvisor.com"
     with DDGS() as ddgs:
-        results = list(ddgs.text(full_query, max_results=5))
-    return results
+        return list(ddgs.text(full_query, max_results=5))

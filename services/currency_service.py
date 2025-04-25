@@ -1,24 +1,13 @@
-"""
-    Currency service module
-"""
-import requests
+from duckduckgo_search import DDGS
 
-class CurrencyService:
-    """
-        Currency service class
-    """
-    def __init__(self, api_key: str) -> None:
-        """
-            Currency service constructor
-        """
-        self.api_key = api_key
-        self.base_url = "https://v6.exchangerate-api.com/v6"
+def get_currency_summary(query: str) -> str:
+    try:
+        with DDGS() as ddgs:
+            results = ddgs.text(f"{query} site:x-rates.com", max_results=3)
+            for result in results:
+                if "equals" in result["body"].lower() or "=" in result["body"]:
+                    return f"💱 {result['body']}"
 
-    def get_exchange_rate(self, base_currency: str, target_currency: str) -> dict:
-        """
-            Get exchange rate between two currencies
-        """
-        url = f"{self.base_url}/{self.api_key}/pair/{base_currency}/{target_currency}"
-        response = requests.get(url, timeout=300)
-        response.raise_for_status()
-        return response.json()
+        return f"⚠️ Couldn’t find conversion info for '{query}'. Try rephrasing."
+    except Exception as e:
+        return f"❌ Error fetching currency info: {str(e)}"

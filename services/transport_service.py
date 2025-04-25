@@ -1,16 +1,7 @@
 from duckduckgo_search import DDGS
 
-def search_local_transport(destination: str):
-    """
-    Uses DuckDuckGo to search for local transport suggestions.
-    Returns a list of text results.
-    """
-    query = (
-        f"How to get around {destination} as a tourist site:tripadvisor.com OR "
-        f"site:reddit.com OR site:lonelyplanet.com"
-    )
-
+def search_local_transport(query: str):
+    """Search transport info using DuckDuckGo."""
+    full_query = f"{query} local transport site:tripadvisor.com OR site:travelblog.org"
     with DDGS() as ddgs:
-        results = list(ddgs.text(query, max_results=5))
-
-    return results
+        return list(ddgs.text(full_query, max_results=5))
