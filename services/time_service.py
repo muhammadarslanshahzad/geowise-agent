@@ -37,7 +37,7 @@ class TimeService:
 
             # Use UTC time and convert it to the target timezone
             timezone = pytz.timezone(timezone_str)
-            utc_now = datetime.now(timezone.utc).replace(tzinfo=pytz.utc)
+            utc_now = datetime.now(pytz.utc)
             local_time = utc_now.astimezone(timezone).strftime("%Y-%m-%d %H:%M:%S")
 
             return {

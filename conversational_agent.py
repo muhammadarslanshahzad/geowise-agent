@@ -54,3 +54,31 @@ def create_conversational_agent():
     )
 
     return agent_executor
+
+
+def main():
+    print("🌍 Initializing GeoWise Travel Assistant...\n")
+
+    try:
+        agent = create_conversational_agent()
+        print("✅ GeoWise is ready! Ask anything about time, weather, or currency.")
+        print("💡 Type 'exit' or 'quit' to end the conversation.\n")
+
+        while True:
+            user_input = input("👤 You: ")
+            if user_input.lower() in ['exit', 'quit']:
+                print("👋 Goodbye! Safe travels ✈️")
+                break
+
+            try:
+                response = agent.run(user_input)
+                print(f"\n🤖 GeoWise:\n{response}\n")
+            except Exception as e:
+                print(f"⚠️ Error processing your request: {e}")
+
+    except Exception as setup_error:
+        print(f"❌ Failed to initialize agent: {setup_error}")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,11 +1,25 @@
-from duckduckgo_search import DDGS
+import requests
+import os
+
+API_KEY = os.getenv("WEATHER_API_KEY")
 
 def get_weather_summary(city: str) -> str:
-    query = f"current weather in {city}"
-    with DDGS() as ddgs:
-        results = ddgs.text(query, max_results=1)
-        if not results:
-            return f"⚠️ Could not find weather information for {city}."
-        
-        snippet = results[0]['body']
-        return f"🌤️ Weather summary for **{city.title()}**:\n{snippet}"
+    url = (
+        f"http://api.openweathermap.org/data/2.5/weather?q={city}"
+        f"&appid={API_KEY}&units=metric"
+    )
+    response = requests.get(url)
+    if response.status_code != 200:
+        return f"⚠️ Could not get weather data for {city}."
+
+    data = response.json()
+    temp = data["main"]["temp"]
+    condition = data["weather"][0]["description"].title()
+    humidity = data["main"]["humidity"]
+
+    return (
+        f"🌤️ **Weather in {city.title()}**:\n"
+        f"- Temperature: **{temp}°C**\n"
+        f"- Condition: **{condition}**\n"
+        f"- Humidity: **{humidity}%**"
+    )

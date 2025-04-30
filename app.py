@@ -32,6 +32,33 @@ tab1, tab2 = st.tabs(["🗣️ Chat Agent", "✈️ Travel Planner"])
 # 🤖 TAB 1: Conversational Agent
 # ----------------------------
 with tab1:
+    st.markdown(
+        """
+        <div style="
+            padding: 1.5rem; 
+            margin-top: 1.25rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 12px; 
+            background-color: #111111;
+        ">
+            <h3 style="margin-bottom: 1.2rem; font-weight: 700; font-size: 1.5rem;">
+                🧭 What can I help you with today?
+            </h3>
+            <ul style="list-style-type: none; padding-left: 0; line-height: 1.8;">
+                <li>🌤️ <strong>Weather:</strong> <code>What's the weather in London?</code></li>
+                <li>🕒 <strong>Time:</strong> <code>Current time in Tokyo?</code></li>
+                <li>💱 <strong>Currency:</strong> <code>Convert 100 USD to PKR</code></li>
+            </ul>
+            <div style="margin-top: 1rem; font-size: 0.95rem;">
+                Or switch to the <strong>✈️ Travel Planner</strong> tab to generate your custom trip!
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
     user_input = st.chat_input("Ask me anything...")
 
     if user_input:
