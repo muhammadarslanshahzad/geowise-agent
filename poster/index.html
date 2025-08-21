@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GeoWise — AI Travel Assistant</title>
+  <meta name="description" content="Fast, accurate answers about any destination — time, currency, weather, safety, visas, and more — in one chat." />
+  <meta property="og:title" content="GeoWise — AI Travel Assistant" />
+  <meta property="og:description" content="Fast, accurate answers about any destination — in one chat. Private by design." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#4db1ff" />
+
+  <style>
+    :root{
+      --ink:#eef5ff;
+      --muted:#b9c7e6;
+      --card:#0b162b;      /* solid card */
+      --chip:rgba(255,255,255,.08);
+      --border:rgba(255,255,255,.12);
+      --accent1:#63b3ff;
+      --accent2:#a06fff;
+    }
+
+    *{ box-sizing:border-box }
+    html,body{ height:100% }
+
+    /* ===== Vibrant background (not dim) ===== */
+    body{
+      margin:0; color:var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+      position:relative; overflow-x:hidden;
+
+      /* brighter “sky to sea” gradient */
+      background:
+        radial-gradient(1200px 700px at 12% -8%, #ffe7b0 0%, #ffd08a 35%, transparent 36%) no-repeat,
+        linear-gradient(180deg, #edfbff 0%, #d7f0ff 38%, #c6e5ff 100%);
+    }
+
+    /* subtle colored glows (don’t dim) */
+    body::before{
+      content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
+      background:
+        radial-gradient(900px 600px at 10% 5%, rgba(255,200,120,.28) 0%, rgba(255,200,120,0) 60%),
+        radial-gradient(800px 520px at 115% 40%, rgba(99,179,255,.28) 0%, rgba(99,179,255,0) 65%);
+    }
+
+    /* travel illustration watermark — BLENDED so white parts don’t wash the page */
+    body::after{
+      content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+      background: url("travel_bg.jpg?v=3") no-repeat right 6% center;
+      background-size: 680px auto;
+
+      /* make the bg visible and colorful without dulling the page */
+      opacity:.18;               /* increase if you want more presence */
+      mix-blend-mode:multiply;   /* treats white as “transparent-ish” over the gradient */
+      filter: saturate(1.15);    /* a little pop */
+    }
+    @media (max-width:1100px){
+      body::after{ background-size:520px auto; background-position: 110% 50%; opacity:.16; }
+    }
+    @media (max-width:700px){
+      body::after{ background-size:360px auto; background-position: 115% 55%; opacity:.14; }
+    }
+
+    /* ===== Layout / Card (stays prominent) ===== */
+    .wrap{ max-width:1100px; margin:40px auto; padding:0 24px; }
+
+    .card{
+      background: var(--card);          /* solid, no transparency */
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:28px;
+      display:grid; grid-template-columns: 1.2fr .8fr; gap:28px;
+      box-shadow: 0 14px 44px rgba(0,0,0,.22);
+    }
+    @media (max-width:900px){ .card{ grid-template-columns:1fr } }
+
+    .chips{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px }
+    .chip{
+      display:inline-flex; align-items:center; padding:8px 12px; border-radius:999px;
+      background:var(--chip); border:1px solid var(--border); color:var(--ink); text-decoration:none;
+      font-weight:600; font-size:14px;
+    }
+    .chip.brand{ background:linear-gradient(90deg, var(--accent1), var(--accent2)); color:#0b0f2a; border:none }
+
+    h1{ margin:10px 0 12px; font-size: clamp(36px, 6vw, 64px); line-height:1.05; color:var(--ink) }
+    .lede{ font-size:18px; margin:0 0 16px; color:var(--ink) }
+    .bullets{ margin:10px 0 22px; color:var(--muted); padding-left:20px }
+    .bullets li{ margin:8px 0 }
+
+    .cta-row{ display:flex; flex-wrap:wrap; gap:12px; margin:6px 0 22px }
+    .btn{
+      display:inline-block; padding:12px 18px; border-radius:12px; text-decoration:none; font-weight:700;
+      border:1px solid var(--border); color:var(--ink); background:transparent;
+    }
+    .btn.primary{ background:linear-gradient(90deg, var(--accent1), var(--accent2)); color:#0b0f2a; border:none }
+    .btn.ghost{ background:transparent }
+
+    .suggestions{ margin-top:6px; display:flex; gap:12px; flex-wrap:wrap }
+    .suggestions a{
+      padding:10px 14px; border-radius:10px; text-decoration:none; color:var(--ink);
+      background:var(--chip); border:1px solid var(--border);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:14px;
+    }
+
+    /* ===== QR panel ===== */
+    .qr{
+      background: rgba(255,255,255,.06);
+      border:1px solid var(--border);
+      border-radius:18px; padding:20px; text-align:center; align-self:start;
+    }
+    .qr-img{
+      display:block; margin:0 auto 10px;
+      max-width:none; height:auto;
+      image-rendering: pixelated; image-rendering: crisp-edges;
+      background:#fff; padding:12px; border-radius:0;
+    }
+    .qr small{ color:var(--muted) }
+
+    /* ===== Footer ===== */
+    .footer{
+      grid-column: 1 / -1; text-align:center; color:var(--muted); margin-top:6px;
+    }
+    .footer a{ color:var(--ink); text-decoration:underline dotted }
+
+    /* Print */
+    @media print{
+      *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important }
+      @page{ size:A4; margin:0 }
+      body::after{ opacity:.12; mix-blend-mode:multiply }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrap">
+    <div class="card">
+      <!-- LEFT -->
+      <div>
+        <div class="chips">
+          <a class="chip brand" href="https://www.neuralgenix.ai/" target="_blank" rel="noopener">NEURAL&nbsp;GENIX</a>
+        </div>
+
+        <h1>GeoWise — AI Travel Assistant</h1>
+
+        <p class="lede">
+          Ask about any country. Get facts on time, currency, weather, safety, visas, and more — in one chat.
+        </p>
+
+        <ul class="bullets">
+          <li><strong>Fewer support questions.</strong> Common travel queries answered instantly.</li>
+          <li><strong>Easy to add.</strong> Works on your site or app; can use your data and APIs.</li>
+          <li><strong>Private by design.</strong> You control data with clear logs.</li>
+          <li><strong>Built right.</strong> Modern LLMs with tools & retrieval for reliable results.</li>
+        </ul>
+
+        <div class="cta-row">
+          <a class="btn primary" href="https://geowise-agent-834ayjzfuzvdvinmifsg4k.streamlit.app/?embed=true" target="_blank" rel="noopener">🚀 Try the Live Demo</a>
+          <a class="btn" href="https://github.com/muhammadarslanshahzad/geowise-agent" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn ghost" href="https://calendly.com/contact-neuralgenix/30min" target="_blank" rel="noopener">Book a Call</a>
+        </div>
+
+        <div class="prompts">
+          Try Something like these:
+          <div class="suggestions">
+            <a href="#">What’s the local time in Tokyo?</a>
+            <a href="#">Convert 200 USD to JPY.</a>
+            <a href="#">What’s the weather in Lisbon today?</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <aside class="qr">
+        <img
+          src="qrCode_geowise.png?v=2025-08-22-06"
+          alt="QR code linking to the GeoWise live demo"
+          width="300" height="300"
+          class="qr-img"
+        />
+        <small>Scan to open on phone.</small>
+      </aside>
+
+      <div class="footer">
+        Built by Neural Genix • <a href="mailto:contact.neuralgenix@gmail.com">contact.neuralgenix@gmail.com</a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
